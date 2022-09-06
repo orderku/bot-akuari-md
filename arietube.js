@@ -615,19 +615,7 @@ Silahkan @${m.mentionedJid[0].split`@`[0]} untuk ketik terima/tolak`
                 arietube.sendMessage(m.chat, { image: { url: 'https://asset.kompas.com/crops/iFErOVsv-tbW5AR5JSPOmMEA0NM=/121x0:1000x586/750x500/data/photo/2019/07/03/2998909183.jpg' }, caption: `*Hai Kak ${m.pushName}*\n\nDonasinya disini kack!\nDANA: 08116646665\nGOPAY: 08116646665\nOVO: 08116646665\n\n*Makasih kak*` }, { quoted: m })
             }
             break
-            case 'sc': {
-				  let buttons = [
-                    {buttonId: `donasi`, buttonText: {displayText: 'Donasi'}, type: 1}
-                ]
-                let buttonMessage = {
-                    text: `Script : https://github.com/YangJunMing12/GabutBot-MD`,
-                    footer: 'Recode by Shiny Sebastian, Arietube001',
-                    buttons: buttons,
-                    headerType: 2
-                }
-                arietube.sendMessage(m.chat, buttonMessage, { quoted: m })
-            }
-            break
+           
             case 'chat': {
                 if (!isCreator) throw mess.owner
                 if (!q) throw 'Option : 1. mute\n2. unmute\n3. archive\n4. unarchive\n5. read\n6. unread\n7. delete'
@@ -1875,8 +1863,8 @@ break
 	       break     
 	        case 'simih': case 'simisimi': {
             if (!text) throw `Example : ${prefix + command} text`
-            hm = await fetchJson(api('zenz', '/api/simisimi', { text : text } ))
-            m.reply(hm.result.message)
+            hm = await fetchJson(api('zenz', '/simi/simi', { query : text } ))
+            m.reply(hm.respon)
             }
             break
             case 'toimage': case 'toimg': {
@@ -2187,13 +2175,13 @@ break
 			case 'wikipedia':
 			if (!text) throw 'Masukkan Query Wiki!'
 					kueri = args.join(" ")
-                    get_result = await fetchJson(`https://zenzapis.xyz/information/wikipedia?query=${kueri}&apikey=woaibeijingtiananmen`)
+                    get_result = await fetchJson(`https://api.akuari.my.id/search/wiki?query=indonesia${kueri}`)
 				
 					  let buttons = [
                     {buttonId: `wikipedia`, buttonText: {displayText: 'Wikipedia'}, type: 1}
                 ]
                 let buttonMessage = {
-                    text: `[ *WIKIPEDIA SEARCH* ]\nJudul: ${get_result.result.judul}\n${get_result.result.isi}\n`,
+                    text: `[ *WIKIPEDIA SEARCH* ]\nJudul: ${get_result.result.judul}\n${get_result.result.wiki}\n`,
                     footer: 'Wikipedia search',
                     buttons: buttons,
                     headerType: 2
@@ -2243,7 +2231,7 @@ break
                 arietube.sendMessage(m.chat, { image: { url: api('zenz', '/photooxy/' + command, { text: text } ) }, caption: `Photo Oxy ${command}` }, { quoted: m })
             }
             break
-            case 'ffcover': case 'crossfire': case 'galaxy': case 'glass': case 'neon': case 'beach': case 'blackpink': case 'igcertificate': case 'ytcertificate': {
+            case 'blackpink': case 'bear': case 'angel': case 'queen': case 'style-1917': case 'futuristic-technology': case 'purple': {
                 if (!text) throw 'No Query Text'
                 m.reply(mess.wait)
                 arietube.sendMessage(m.chat, { image: { url: api('zenz', '/ephoto/' + command, { text: text } ) }, caption: `Ephoto ${command}` }, { quoted: m })
@@ -2577,7 +2565,7 @@ break
                     {buttonId: `tiktokmp3 ${text}`, buttonText: {displayText: '♫ Audio'}, type: 1}
                 ]
                 let buttonMessage = {
-                    video: { url: anu.result.watermark },
+                    video: { url: anu },
                     caption: `Download From ${text}`,
                     footer: 'Press The Button Below',
                     buttons: buttons,
@@ -2589,7 +2577,7 @@ break
             case 'tiktokmp3': case 'tiktokaudio': {
                 if (!text) throw 'Masukkan Query Link!'
                 m.reply(mess.wait)
-                let anu = await fetchJson(api('zenz', '/downloader/link', { link: text } ))
+                let anu = await fetchJson(api('zenz', '/downloader/tiktok', { link: text } ))
                 let buttons = [
                     {buttonId: `tiktoknowm ${text}`, buttonText: {displayText: '► No Watermark'}, type: 1},
                     {buttonId: `tiktokwm ${text}`, buttonText: {displayText: '► With Watermark'}, type: 1}
@@ -2608,8 +2596,8 @@ break
                 if (!text) throw 'No Query Url!'
                 m.reply(mess.wait)
                 if (/(?:\/p\/|\/reel\/|\/tv\/)([^\s&]+)/.test(isUrl(text)[0])) {
-                    let anu = await fetchJson(api('zenz', '/downloader/instagram2', { url: isUrl(text)[0] } ))
-                    for (let media of anu.data) arietube.sendFileUrl(m.chat, media, `Download Url Instagram From ${isUrl(text)[0]}`, m)
+                    let anu = await fetchJson(api('zenz', '/downloader/igdl', { link: isUrl(text)[0] } ))
+                    for (let media of anu.respon.link) arietube.sendFileUrl(m.chat, media, `Download Url Instagram From ${isUrl(text)[0]}`, m)
                 } else if (/\/stories\/([^\s&]+)/.test(isUrl(text)[0])) {
                     let anu = await fetchJson(api('zenz', '/downloader/instastory', { url: isUrl(text)[0] } ))
                     arietube.sendFileUrl(m.chat, anu.media[0].url, `Download Url Instagram From ${isUrl(text)[0]}`, m)
@@ -2627,21 +2615,21 @@ break
             case 'soundcloud': case 'scdl': {
                 if (!text) throw 'No Query Title'
                 m.reply(mess.wait)
-                let anu = await fetchJson(api('zenz', '/downloader/soundcloud', { url: isUrl(text)[0] } ))
-                let msg = await arietube.sendImage(m.chat, anu.result.thumb, `⭔ Title : ${anu.result.title}\n⭔ Url : ${isUrl(text)[0]}`)
-                arietube.sendMessage(m.chat, { audio: { url: anu.result.url }, mimetype: 'audio/mpeg', fileName: anu.result.title+'.m4a' }, { quoted: m })
+                let anu = await fetchJson(api('zenz', '/downloader/scdl', { link: isUrl(text)[0] } ))
+                let msg = await arietube.sendImage(m.chat, anu.thumb, `⭔ Title : ${anu.title}\n⭔ Url : ${isUrl(text)[0]}`)
+                arietube.sendMessage(m.chat, { audio: { url: anu.link }, mimetype: 'audio/mpeg', fileName: anu.result.title+'.m4a' }, { quoted: m })
             }
             break
 	        case 'twitdl': case 'twitter': {
                 if (!text) throw 'Masukkan Query Link!'
                 m.reply(mess.wait)
-                let anu = await fetchJson(api('zenz', '/api/downloader/twitter', { url: text } ))
+                let anu = await fetchJson(api('zenz', '/api/downloader/twitter', { link: text } ))
                 let buttons = [
                     {buttonId: `twittermp3 ${text}`, buttonText: {displayText: '► Audio'}, type: 1}
                 ]
                 let buttonMessage = {
-                    video: { url: anu.result.HD || anu.result.SD },
-                    caption: util.format(anu.result),
+                    video: { url: anu.HD || anu.SD },
+                    caption: util.format(anu.desc),
                     footer: 'Press The Button Below',
                     buttons: buttons,
                     headerType: 5
@@ -2652,32 +2640,32 @@ break
             case 'twittermp3': case 'twitteraudio': {
                 if (!text) throw 'Masukkan Query Link!'
                 m.reply(mess.wait)
-                let anu = await fetchJson(api('zenz', '/api/downloader/twitter', { url: text } ))
+                let anu = await fetchJson(api('zenz', '/api/downloader/twitter', { link: text } ))
                 let buttons = [
                     {buttonId: `twitter ${text}`, buttonText: {displayText: '► Video'}, type: 1}
                 ]
                 let buttonMessage = {
-		    image: { url: anu.result.thumb },
-                    caption: util.format(anu.result),
+		    image: { url: anu.thumb },
+                    caption: util.format(anu.desc),
                     footer: 'Press The Button Below',
                     buttons: buttons,
                     headerType: 4
                 }
                 let msg = await arietube.sendMessage(m.chat, buttonMessage, { quoted: m })
-                arietube.sendMessage(m.chat, { audio: { url: anu.result.audio } }, { quoted: m })
+                arietube.sendMessage(m.chat, { audio: { url: anu.audio } }, { quoted: m })
             }
             break
 	        case 'fbdl': case 'fb': case 'facebook': {
                 if (!text) throw 'Masukkan Query Link!'
                 m.reply(mess.wait)
-                let anu = await fetchJson(api('zenz', '/api/downloader/facebook', { url: text } ))
-                arietube.sendMessage(m.chat, { video: { url: anu.result.url }, caption: `⭔ Title : ${anu.result.title}`}, { quoted: m })
+                let anu = await fetchJson(api('zenz', '/api/downloader/fbdl', { link: text } ))
+                arietube.sendMessage(m.chat, { video: { url: anu.url.url }, caption: `⭔ Title : ${anu.info.title}`}, { quoted: m })
             }
             break
 	        case 'pindl': case 'pinterestdl': {
                 if (!text) throw 'Masukkan Query Link!'
                 m.reply(mess.wait)
-                let anu = await fetchJson(api('zenz', '/api/downloader/pinterestdl', { url: text } ))
+                let anu = await fetchJson(api('zenz', '/api/downloader/pindl', { link: text } ))
                 arietube.sendMessage(m.chat, { video: { url: anu.result }, caption: `Download From ${text}` }, { quoted: m })
             }
             break
@@ -3221,9 +3209,9 @@ let capt = `⭔ Title: ${judul}
             break
             case 'drakor': {
             if (!text) throw `Example : ${prefix + command} love`
-            let res = await fetchJson(api('zenz', '/webzone/drakor', { query: text } ))
+            let res = await fetchJson(api('zenz', '/search/drakor', { query: text } ))
             let capt = `Drakor Search From : ${text}\n\n`
-            for (let i of res.result) {
+            for (let i of res.hasil) {
             capt += `⭔ Judul: ${i.judul}\n`
             capt += `⭔ Years: ${i.years}\n`
             capt += `⭔ Genre: ${i.genre}\n`
@@ -3254,20 +3242,13 @@ let capt = `⭔ Title: ${judul}
 				case 'moviesearch': case 'lk21':
 			if (args.length == 0) throw (`Example: ${prefix + command} Transformer`)
 				kueri = args.join(" ")
-				get_result = await fetchJson(`https://api.lolhuman.xyz/api/lk21?apikey=woaibeijingtiananmen&query=${kueri}`)
-				get_result = get_result.result
-				ini_txt = `⭔ Title : ${get_result.title}\n`
-				ini_txt += `⭔ Genre : ${get_result.genre}\n`
-				ini_txt += `⭔ Views : ${get_result.views}\n`
-				ini_txt += `⭔ Duration : ${get_result.duration}\n`
-				ini_txt += `⭔ Years : ${get_result.tahun}\n`
-				ini_txt += `⭔ Rating : ${get_result.rating}\n`
-				ini_txt += `⭔ Description : ${get_result.desc}\n`
-				ini_txt += `⭔ Actors : ${get_result.actors}\n`
-				ini_txt += `⭔ Location : ${get_result.location}\n`
-				ini_txt += `⭔ Release Date : ${get_result.date_release}\n`
-				ini_txt += `⭔ Language : ${get_result.language}\n`
-				ini_txt += `⭔ Link DL : ${get_result.link_dl}`
+				get_result = await fetchJson(`https://api.akuari.my.id/search/film?query=${kueri}`)
+				get_result = get_result.hasil
+				ini_txt = `⭔ Title : ${get_result.judul}\n`
+				ini_txt += `⭔ Years : ${get_result.upload}\n`
+				ini_txt += `⭔ Type : ${get_result.type}\n`
+				ini_txt += `⭔ Quality : ${get_result.quality}\n`
+				ini_txt += `⭔ Link : ${get_result.link}`
 				
 				arietube.sendImage(m.chat, get_result.thumbnail, ini_txt, m)
 				break
@@ -3311,13 +3292,11 @@ let capt = `⭔ Title: ${judul}
 				if (args.length == 0) throw (`Usage: ${prefix + command} link`)
                 m.reply(mess.wait) 
 			kueri = args[0]
-			get_result = await fetchJson(`https://api.lolhuman.xyz/api/mediafire?apikey=woaibeijingtiananmen&url=${kueri}`)
-			get_result = get_result.result
+			get_result = await fetchJson(`https://api.akuari.my.id/downloader/mediafireDl?link=${kueri}`)
+			get_result = get_result.hasil
 			ini_txt = `[ *MEDIAFIRE ALTERNATIVE DOWNLOAD* ]\n\n`
-			ini_txt += `⭔ Name File : ${get_result.filename}\n`
-			ini_txt += `⭔ Type : ${get_result.filetype}\n`
-			ini_txt += `⭔ Size : ${get_result.filesize}\n`
-			ini_txt += `⭔ Date Upload : ${get_result.uploaded}\n`
+			ini_txt += `⭔ Name File : ${get_result.title}\n`
+			ini_txt += `⭔ Size : ${get_result.size}\n`
 			ini_txt += `⭔ Download URL : ${get_result.link}\n`
 			m.reply(ini_txt)
 			break
@@ -3389,9 +3368,9 @@ let capt = `⭔ Title: ${judul}
 					case 'lirik':
                     if (args.length == 0) throw(`Example: ${prefix + command} Melukis Senja`)
                     query = args.join(" ")
-                    get_result = await fetchJson(`http://api.lolhuman.xyz/api/lirik?apikey=woaibeijingtiananmen&query=${query}`)
+                    get_result = await fetchJson(`https://api.akuari.my.id/search/lirik?query=${query}`)
                     ini_txt = `[ *LIRIK LAGU SEARCH* ]\n\n`
-					ini_txt = `${get_result.result}`
+					ini_txt = `${get_result.lirik}`
 		m.reply(ini_txt)
 		break
 		case 'jadwaltv':
@@ -3401,24 +3380,15 @@ let capt = `⭔ Title: ${judul}
                     ini_txt = `[ *JADWAL TV* ]\n\n`
 					ini_txt = `${get_result.result}`
 		m.reply(ini_txt)
-		case 'covidindo': case 'coronaindo':
-		get_result = await fetchJson(`https://api.lolhuman.xyz/api/corona/indonesia?apikey=woaibeijingtiananmen`)
-		get_result = get_result.result
+		case 'covid':
+		 if (args.length == 0) throw(`Example: ${prefix + command} indonesia`)
+                    query = args.join(" ")
+		get_result = await fetchJson(`https://api.akuari.my.id/info/covid?negara=${kueri}`)
 		ini_txt = `[ *CORONA INDONESIA* ]\n\n`
-		ini_txt += `⭔ Positive : ${get_result.positif}\n`
+		ini_txt += `⭔ Positive : ${get_result.kasus}\n`
 		ini_txt += `⭔ Meninggal : ${get_result.meninggal}\n`
 		ini_txt += `⭔ Sembuh : ${get_result.sembuh}\n`
-		ini_txt += `⭔ Dirawat : ${get_result.dirawat}\n`
-		m.reply(ini_txt)
-                    break
-					case 'covidglobal': case 'coronaglobal':
-		get_result = await fetchJson(`https://api.lolhuman.xyz/api/corona/global?apikey=woaibeijingtiananmen`)
-		get_result = get_result.result
-		ini_txt = `[ *CORONA GLOBAL* ]\n\n`
-		ini_txt += `⭔ Positive : ${get_result.positive}\n`
-		ini_txt += `⭔ Meninggal : ${get_result.meninggal}\n`
-		ini_txt += `⭔ Sembuh : ${get_result.sembuh}\n`
-		ini_txt += `⭔ Dirawat : ${get_result.dirawat}\n`
+		ini_txt += `⭔ Update : ${get_result.update}\n`
 		m.reply(ini_txt)
                     break
 					case 'art':
@@ -3438,7 +3408,7 @@ let capt = `⭔ Title: ${judul}
                     {buttonId: `${command}`, buttonText: {displayText: 'Next'}, type: 1}
                 ]
                 let buttonMesasage = {
-                    image: { url: `http://api.lolhuman.xyz/api/random/${command}?apikey=woaibeijingtiananmen` },
+                    image: { url: `https://api.akuari.my.id/randomimganime/${command}` },
                     caption: `Random image for ${command}`,
                     footer: arietube.user.name,
                     buttons: buttonas,
@@ -3453,7 +3423,7 @@ let capt = `⭔ Title: ${judul}
                     {buttonId: `darkjoke`, buttonText: {displayText: 'Next'}, type: 1}
                 ]
                 let dj2 = {
-                    image: { url: `https://api.lolhuman.xyz/api/meme/darkjoke?apikey=woaibeijingtiananmen` },
+                    image: { url: `https://api.akuari.my.id/randomimage/darkjokes1` },
                     caption: `JANGAN BAPER YAKK`,
                     footer: arietube.user.name,
                     buttons: dj1,
@@ -3468,7 +3438,7 @@ let capt = `⭔ Title: ${judul}
                     {buttonId: `randommeme`, buttonText: {displayText: 'Next'}, type: 1}
                 ]
                 let rm2 = {
-                    image: { url: `https://api.lolhuman.xyz/api/random/meme?apikey=woaibeijingtiananmen` },
+                    image: { url: `https://api.akuari.my.id/other/meme` },
                     caption: `TAHAN KETAWA NGAB MWEHEHEHE`,
                     footer: `Random Meme`,
                     buttons: rm1,
@@ -3479,11 +3449,14 @@ let capt = `⭔ Title: ${judul}
             
 			break
 			case 'mindo': case 'memeindo':
+			 get_result = await fetchJson(`https://api.akuari.my.id/randomimage/darkmeme17`)
+			 adada = get_result.hasil
+                   
                 let mi1 = [
                     {buttonId: `memeindo`, buttonText: {displayText: 'Next'}, type: 1}
                 ]
                 let mi2 = {
-                    image: { url: `https://api.lolhuman.xyz/api/meme/memeindo?apikey=woaibeijingtiananmen` },
+                    image: { url: adada },
                     caption: `TAHAN KETAWA NGAB MWEHEHEHE`,
                     footer: `Cintailah meme lokal`,
                     buttons: mi1,
@@ -3891,7 +3864,7 @@ break
 ╚═════ ▓▓ ࿇
 
 ╔═ *🌐 Internet Menu*
-╟🌏 ${prefix}internetmenu
+╟🌏 ${prefix}moviesearch
 ╚═════ ▓▓ ࿇
 
 
@@ -3910,9 +3883,6 @@ break
 ╟⏏️ ${prefix}getmusic [query]
 ╟⏏️ ${prefix}getvideo [query]
 ╟⏏️ ${prefix}umma [url]
-╟⏏️ ${prefix}joox [query]
-╟⏏️ ${prefix}spotify [url]
-╟⏏️ ${prefix}spotifysearch [query]
 ╟⏏️ ${prefix}soundcloud [url]
 ╟⏏️ ${prefix}zippyshare [url]
 ╟⏏️ ${prefix}mediafire [url]
@@ -3920,7 +3890,6 @@ break
 
 ╔═ *🔍 Searching Menu*
 ╟
-╟⏏️ ${prefix}kusonimesearch [query]
 ╟🔃 ${prefix}play [query]
 ╟🔃 ${prefix}yts [query]
 ╟🔃 ${prefix}google [query]
@@ -3931,23 +3900,15 @@ break
 ╟🔃 ${prefix}ytsearch [query]
 ╟🔃 ${prefix}ringtone [query]
 ╟🔃 ${prefix}wikipedia [query]
-╟🔃 ${prefix}jaraktempuh [kota1|kota2]
-╟🔃 ${prefix}stalkig [query]
-╟🔃 ${prefix}stalkgithub [query]
-╟🔃 ${prefix}mlusername [user ID/server ID]
-╟🔃 ${prefix}ffusername [User ID]
-╟🔃 ${prefix}minecraftserverstatus [Server IP]
-╟🔃 ${prefix}genshinchara [query]
 ╟🔃 ${prefix}lirik [query]
 ╟🔃 ${prefix}chord [query]
-╟🔃 ${prefix}jadwaltv [query]
 ╚═════ ▓▓ ࿇
 
-╔═ *🆎 Random Menu*
+╔═ *🆎 Random Menu perbaikan*
 ╟🔗 ${prefix}randomimage
 ╚═════ ▓▓ ࿇
 
-╔═ *📃 TextPro Menu*
+╔═ *📃 TextPro Menu perbaikan*
 ╟
 ╟🕶️ ${prefix}3dchristmas
 ╟🕶️ ${prefix}3ddeepsea
@@ -3982,7 +3943,7 @@ break
 ╟🕶️ ${prefix}gluetext
 ╚═════ ▓▓ ࿇
 
-╔═ *📸 Foto Oxy Menu*
+╔═ *📸 Foto Oxy Menu perbaikan*
 ╟
 ╟📷 ${prefix}shadow
 ╟📷 ${prefix}romantic
@@ -4000,15 +3961,13 @@ break
 
 ╔═ *📸 Ephoto Menu*
 ╟
-╟📷 ${prefix}ffcover
-╟📷 ${prefix}crossfire
-╟📷 ${prefix}galaxy
-╟📷 ${prefix}glass
-╟📷 ${prefix}neon
-╟📷 ${prefix}beach
 ╟📷 ${prefix}blackpink
-╟📷 ${prefix}igcertificate
-╟📷 ${prefix}ytcertificate
+╟📷 ${prefix}bear
+╟📷 ${prefix}angel
+╟📷 ${prefix}queen
+╟📷 ${prefix}style-1917
+╟📷 ${prefix}futuristic-technology
+╟📷 ${prefix}purple
 ╚═════ ▓▓ ࿇
 
 ╔═ *🎮 Fun Menu*
@@ -4024,7 +3983,7 @@ break
 ╟🎮 ${prefix}delttt
 ╟🎮 ${prefix}tictactoe
 ╟🎮 ${prefix}family100
-╟🎮 ${prefix}tebak [option]
+╟🎮 ${prefix}tebak [option] perbaikan
 ╟🎮 ${prefix}math [mode]
 ╟🎮 ${prefix}suitpvp [@tag]
 ╟🎮 ${prefix}suitbot
@@ -4056,39 +4015,6 @@ break
 ╟📋 ${prefix}tagmenu
 ╚═════ ▓▓ ࿇
 
-╔═ *🔮 Primbon Menu*
-╟
-╟🔮 ${prefix}nomorhoki
-╟🔮 ${prefix}artimimpi
-╟🔮 ${prefix}artinama
-╟🔮 ${prefix}ramaljodoh
-╟🔮 ${prefix}ramaljodohbali
-╟🔮 ${prefix}suamiistri
-╟🔮 ${prefix}ramalcinta
-╟🔮 ${prefix}cocoknama
-╟🔮 ${prefix}pasangan
-╟🔮 ${prefix}jadiannikah
-╟🔮 ${prefix}sifatusaha
-╟🔮 ${prefix}rezeki
-╟🔮 ${prefix}pekerjaan
-╟🔮 ${prefix}nasib
-╟🔮 ${prefix}penyakit
-╟🔮 ${prefix}tarot
-╟🔮 ${prefix}fengshui
-╟🔮 ${prefix}haribaik
-╟🔮 ${prefix}harisangar
-╟🔮 ${prefix}harisial
-╟🔮 ${prefix}nagahari
-╟🔮 ${prefix}arahrezeki
-╟🔮 ${prefix}peruntungan
-╟🔮 ${prefix}weton
-╟🔮 ${prefix}karakter
-╟🔮 ${prefix}keberuntungan
-╟🔮 ${prefix}memancing
-╟🔮 ${prefix}masasubur
-╟🔮 ${prefix}zodiak
-╟🔮 ${prefix}shio
-╚═════ ▓▓ ࿇
 
 ╔═ *🗜️ Creator/Convert Menu*
 ╟
@@ -4109,10 +4035,6 @@ break
 ╟🗜️ ${prefix}dbinary
 ╟🗜️ ${prefix}styletext
 ╟🗜️ ${prefix}smeme
-╟🗜️ ${prefix}ktpmaker
-╟🗜️ ${prefix}bucincert [nama]
-╟🗜️ ${prefix}tololcert [nama]
-╟🗜️ ${prefix}pacarcert [nama1|nama2]
 ╚═════ ▓▓ ࿇
 
 ╔═ *📋 Main Menu*
@@ -4609,7 +4531,6 @@ break
 					rows: [
 					{title: "Darkjoke", rowId: `dj`, description: `Random Meme Gelap :v`},
 				{title: "Random Meme", rowId: `randommeme`, description: `Random Meme Awokawok`},
-				{title: "1cak Meme", rowId: `wancak`, description: `Random Meme dari Wancak`},
 				{title: "Meme Lokal", rowId: `memeindo`, description: `Random Mim Lokal`},
 				]
 				},{
