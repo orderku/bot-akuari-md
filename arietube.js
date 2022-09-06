@@ -1682,7 +1682,7 @@ break
                 m.reply(`Sukses Mengirim Broadcast Ke ${anu.length} Group`)
             }
             break
-            case 'bc': case 'broadcast': case 'bcall': {
+            case 'bca': case 'broadcasta': case 'bcalla': {
                 if (!isCreator) throw mess.owner
                 if (!text) throw `Text mana?\n\nExample : ${prefix + command} fatih-san`
                 let anu = await store.chats.all().map(v => v.id)
@@ -4545,7 +4545,7 @@ break
 				]
 				},
 		]
-                arietube.sendListMsg(m.chat, `*Silahkan Pilih Menu Dibawah Ini*`, `GabutBot-MD V1.5`, `RANDOM IMAGE`, `Click Here`, sections, m)
+                arietube.sendListMsg(m.chat, `*Silahkan Pilih Menu Dibawah Ini*`, ` `, `RANDOM IMAGE`, `Click Here`, sections, m)
 				break
 				case 'internetmenu':
 			 let sectioans = [
@@ -4570,7 +4570,7 @@ break
 				]
 				},
 				]
-				 arietube.sendListMsg(m.chat, `*Silahkan Pilih Menu Dibawah Ini*`, `GabutBot-MD V1.5`, `DOWNLOAD MENU`, `Click Here`, sectioans, m)
+				 arietube.sendListMsg(m.chat, `*Silahkan Pilih Menu Dibawah Ini*`, ` `, `DOWNLOAD MENU`, `Click Here`, sectioans, m)
 				break
 				case 'mainmenu':
 			 let vio = [
@@ -4589,7 +4589,7 @@ break
 				]
 				},
 				]
-				 arietube.sendListMsg(m.chat, `*Silahkan Pilih Menu Dibawah Ini*`, `GabutBot-MD V1.5`, `MAIN MENU`, `Click Here`, vio, m)
+				 arietube.sendListMsg(m.chat, `*Silahkan Pilih Menu Dibawah Ini*`, ` `, `MAIN MENU`, `Click Here`, vio, m)
 				break
 				case 'tagmenu':
 			 let tagg = [
@@ -4606,7 +4606,7 @@ break
 				]
 				},
 				]
-				 arietube.sendListMsg(m.chat, `*Menu tag seseorang yg si paling...*`, `GabutBot-MD V1.5`, `TAG MENU`, `Click Here`, tagg, m)
+				 arietube.sendListMsg(m.chat, `*Menu tag seseorang yg si paling...*`, ` `, `TAG MENU`, `Click Here`, tagg, m)
 				break
             default:
 			
