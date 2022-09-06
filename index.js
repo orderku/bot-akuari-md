@@ -70,7 +70,7 @@ async function startarietube() {
     const arietube = arietubeConnect({
         logger: pino({ level: 'silent' }),
         printQRInTerminal: true,
-        browser: ['GabutBot-MD Connection','Firefox','1.0.0'],
+        browser: ['akuari Connection','Firefox','1.0.0'],
         auth: state
     })
    
