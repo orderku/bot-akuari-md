@@ -324,6 +324,15 @@ ${Array.from(room.jawaban, (jawaban, index) => {
             } else m.reply('*Jawaban Salah!*')
         }
 		
+		if (siapaaku.hasOwnProperty(m.sender.split('@')[0]) && isCmd) {
+            kuis = true
+            jawaban = siapaaku[m.sender.split('@')[0]]
+            if (budy.toLowerCase() == jawaban) {
+                await arietube.sendButtonText(m.chat, [{ buttonId: 'tebak siapaaku', buttonText: { displayText: 'Tebak siapaaku' }, type: 1 }], `🎮 Tebak Kalimat 🎮\n\nJawaban Benar 🎉\n\nIngin bermain lagi? tekan button dibawah`, arietube.user.name, m)
+                delete siapaaku[m.sender.split('@')[0]]
+            } else m.reply('*Jawaban Salah!*')
+        }
+		
 		if (asahotak.hasOwnProperty(m.sender.split('@')[0]) && isCmd) {
             kuis = true
             jawaban = asahotak[m.sender.split('@')[0]]
@@ -611,8 +620,8 @@ Silahkan @${m.mentionedJid[0].split`@`[0]} untuk ketik terima/tolak`
             }
             }
             break
-	    case 'donasi': case 'sewabot': case 'sewa': case 'buypremium': case 'donate': {
-                arietube.sendMessage(m.chat, { image: { url: 'https://asset.kompas.com/crops/iFErOVsv-tbW5AR5JSPOmMEA0NM=/121x0:1000x586/750x500/data/photo/2019/07/03/2998909183.jpg' }, caption: `*Hai Kak ${m.pushName}*\n\nDonasinya disini kack!\nDANA: 08116646665\nGOPAY: 08116646665\nOVO: 08116646665\n\n*Makasih kak*` }, { quoted: m })
+	    case 'donasi': case 'donate': {
+                arietube.sendMessage(m.chat, { image: { url: 'https://asset.kompas.com/crops/iFErOVsv-tbW5AR5JSPOmMEA0NM=/121x0:1000x586/750x500/data/photo/2019/07/03/2998909183.jpg' }, caption: `*Hai Kak ${m.pushName}*\n\nDonasinya disini kack!\nDANA: 0895333016753\nOVO: 0895333016753\n\n*Makasih kak*` }, { quoted: m })
             }
             break
            
@@ -757,10 +766,23 @@ Silahkan @${m.mentionedJid[0].split`@`[0]} untuk ketik terima/tolak`
                     delete caklontong[m.sender.split('@')[0]]
 		    delete caklontong_desk[m.sender.split('@')[0]]
                     }
+					} else if (args[0] === 'siapaaku') {
+					if (siapaaku.hasOwnProperty(m.sender.split('@')[0])) throw "Masih Ada Sesi Yang Belum Diselesaikan!"
+                    let anuw = await fetchJson('https://api.akuari.my.id/games/siapaaku')
+                    let result = anuw.hasil
+                    arietube.sendText(m.chat, `Silahkan Jawab Pertanyaan Berikut\n\n${result.soal}\nWaktu : 60s`, m).then(() => {
+                    siapaaku[m.sender.split('@')[0]] = result.jawaban.toLowerCase()
+                    })
+                    await sleep(60000)
+                    if (siapaaku.hasOwnProperty(m.sender.split('@')[0])) {
+                    console.log("Jawaban: " + result.jawaban)
+                   arietube.sendButtonText(m.chat, [{ buttonId: 'tebak siapaaku', buttonText: { displayText: 'siapaaku' }, type: 1 }], `Waktu Habis\nJawaban:  ${asahotak[m.sender.split('@')[0]]}\n\nIngin bermain? tekan button dibawah`, arietube.user.name, m)
+                    delete siapaaku[m.sender.split('@')[0]]
+					}
                 } else if (args[0] === 'asahotak') {
 					if (asahotak.hasOwnProperty(m.sender.split('@')[0])) throw "Masih Ada Sesi Yang Belum Diselesaikan!"
-                    let anuw = await fetchJson('https://zenzapis.xyz/entertainment/asahotak?apikey=woaibeijingtiananmen')
-                    let result = anuw.result
+                    let anuw = await fetchJson('https://api.akuari.my.id/games/asahotak')
+                    let result = anuw.hasil
                     arietube.sendText(m.chat, `Silahkan Jawab Pertanyaan Berikut\n\n${result.soal}\nWaktu : 60s`, m).then(() => {
                     asahotak[m.sender.split('@')[0]] = result.jawaban.toLowerCase()
                     })
@@ -786,8 +808,8 @@ Silahkan @${m.mentionedJid[0].split`@`[0]} untuk ketik terima/tolak`
 					}
 			} else if (args[0] === 'teki') {
 				if (tekateki.hasOwnProperty(m.sender.split('@')[0])) throw "Masih Ada Sesi Yang Belum Diselesaikan!"
-                    let anuf = await fetchJson('https://zenzapis.xyz/entertainment/tekateki?apikey=woaibeijingtiananmen')
-                    let result = anuf.result
+                    let anuf = await fetchJson('https://api.akuari.my.id/games/tekateki')
+                    let result = anuf.hasil
                     arietube.sendText(m.chat, `Silahkan Jawab Pertanyaan Berikut\n\n${result.soal}\nWaktu : 60s`, m).then(() => {
                     tekateki[m.sender.split('@')[0]] = result.jawaban.toLowerCase()
                     })
@@ -1641,7 +1663,7 @@ break
                 arietube.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: true, id: m.quoted.id, participant: m.quoted.sender } })
             }
             break
-            case 'bcgc': case 'bcgroup': {
+            case 'bcgdc': case 'bcgfroup': {
                 if (!isCreator) throw mess.owner
                 if (!text) throw `Text mana?\n\nExample : ${prefix + command} fatih-san`
                 let getGroups = await arietube.groupFetchAllParticipating()
@@ -2116,10 +2138,10 @@ break
 	    break
 		case 'couple2': {
                 m.reply(mess.wait)
-                let anu = await fetchJson('https://api.lolhuman.xyz/api/random/ppcouple?apikey=woaibeijingtiananmen')
+                let anu = await fetchJson('https://api.akuari.my.id/randomimage/ppcouple')
                
-                arietube.sendMessage(m.chat, { image: { url: anu.result.male }, caption: `Couple Male` }, { quoted: m })
-                arietube.sendMessage(m.chat, { image: { url: anu.result.female }, caption: `Couple Female` }, { quoted: m })
+                arietube.sendMessage(m.chat, { image: { url: anu.hasil.cowok }, caption: `Couple Male` }, { quoted: m })
+                arietube.sendMessage(m.chat, { image: { url: anu.hasil.cewek }, caption: `Couple Female` }, { quoted: m })
             }
 	    break
             case 'coffe': case 'kopi': case 'ngopi': case 'coffee': {
@@ -2205,13 +2227,103 @@ break
                 arietube.sendMessage(m.chat, buttonMessage, { quoted: m })
             }
             break
-	        case 'motivasi': case 'dilanquote': case 'bucinquote': case 'katasenja': case 'puisi': {
-                let anu = await fetchJson(`https://zenzapis.xyz/randomtext/${command}?apikey=woaibeijingtiananmen`)
+			
+			
+			
+			 case 'katabijak': {
+                let anu = await fetchJson(`https://api.akuari.my.id/randomtext/${command}`)
                 let buttons = [
-                    {buttonId: `motivasi`, buttonText: {displayText: 'Next'}, type: 1}
+                    {buttonId: `${command}`, buttonText: {displayText: 'Next'}, type: 1}
                 ]
                 let buttonMessage = {
-                    text: anu.result.message,
+                    text: anu.hasil.quotes,
+                    footer: 'Press The Button Below',
+                    buttons: buttons,
+                    headerType: 2
+                }
+                arietube.sendMessage(m.chat, buttonMessage, { quoted: m })
+            }
+            break
+			 case 'katailham': {
+                let anu = await fetchJson(`https://api.akuari.my.id/randomtext/${command}`)
+                let buttons = [
+                    {buttonId: `${command}`, buttonText: {displayText: 'Next'}, type: 1}
+                ]
+                let buttonMessage = {
+                    text: anu.hasil.result,
+                    footer: 'Press The Button Below',
+                    buttons: buttons,
+                    headerType: 2
+                }
+                arietube.sendMessage(m.chat, buttonMessage, { quoted: m })
+            }
+            break
+			 case 'pantunpakboy': {
+                let anu = await fetchJson(`https://api.akuari.my.id/randomtext/${command}`)
+                let buttons = [
+                    {buttonId: `${command}`, buttonText: {displayText: 'Next'}, type: 1}
+                ]
+                let buttonMessage = {
+                    text: anu.hasil.result,
+                    footer: 'Press The Button Below',
+                    buttons: buttons,
+                    headerType: 2
+                }
+                arietube.sendMessage(m.chat, buttonMessage, { quoted: m })
+            }
+            break
+			 case 'sindiran': {
+                let anu = await fetchJson(`https://api.akuari.my.id/randomtext/${command}`)
+                let buttons = [
+                    {buttonId: `${command}`, buttonText: {displayText: 'Next'}, type: 1}
+                ]
+                let buttonMessage = {
+                    text: anu.hasil.result,
+                    footer: 'Press The Button Below',
+                    buttons: buttons,
+                    headerType: 2
+                }
+                arietube.sendMessage(m.chat, buttonMessage, { quoted: m })
+            }
+            break
+			 
+			 case 'nickepep': {
+                let anu = await fetchJson(`https://api.akuari.my.id/randomtext/${command}`)
+                let buttons = [
+                    {buttonId: `${command}`, buttonText: {displayText: 'Next'}, type: 1}
+                ]
+                let buttonMessage = {
+                    text: anu.hasil,
+                    footer: 'Press The Button Below',
+                    buttons: buttons,
+                    headerType: 2
+                }
+                arietube.sendMessage(m.chat, buttonMessage, { quoted: m })
+            }
+            break
+			
+			 case 'faktaunik': {
+                let anu = await fetchJson(`https://api.akuari.my.id/randomtext/${command}`)
+                let buttons = [
+                    {buttonId: `${command}`, buttonText: {displayText: 'Next'}, type: 1}
+                ]
+                let buttonMessage = {
+                    text: anu.hasil,
+                    footer: 'Press The Button Below',
+                    buttons: buttons,
+                    headerType: 2
+                }
+                arietube.sendMessage(m.chat, buttonMessage, { quoted: m })
+            }
+            break
+			
+	        case 'bacot': {
+                let anu = await fetchJson(`https://api.akuari.my.id/randomtext/${command}`)
+                let buttons = [
+                    {buttonId: `${command}`, buttonText: {displayText: 'Next'}, type: 1}
+                ]
+                let buttonMessage = {
+                    text: anu.hasil.result,
                     footer: 'Press The Button Below',
                     buttons: buttons,
                     headerType: 2
@@ -2225,7 +2337,7 @@ break
                 arietube.sendMessage(m.chat, { image: { url: api('zenz', '/textpro/' + command, { text: text } ) }, caption: `Text Pro ${command}` }, { quoted: m})
 	    }
             break
-	    case 'shadow': case 'romantic': case 'smoke': case 'burnpapper': case 'naruto': case 'lovemsg': case 'grassmsg': case 'lovetext': case 'coffecup': case 'butterfly': case 'harrypotter': case 'retrolol': {
+	    case 'shadow': case 'romantic': case 'smoke': case 'burn_papper': case 'naruto': case 'love_message': case 'cup': case 'burn_paper': case 'wodden_board': case 'glowing_neon': case 'horror': case 'silk': case 'batik': case 'fall': {
                 if (!text) throw 'No Query Text'
                 m.reply(mess.wait)
                 arietube.sendMessage(m.chat, { image: { url: api('zenz', '/photooxy/' + command, { text: text } ) }, caption: `Photo Oxy ${command}` }, { quoted: m })
@@ -2559,13 +2671,13 @@ break
             case 'tiktokwm': case 'tiktokwatermark': {
                 if (!text) throw 'Masukkan Query Link!'
                 m.reply(mess.wait)
-                let anu = await fetchJson(api('zenz', '/downloader/tiktok', { url: text } ))
+               
                 let buttons = [
                     {buttonId: `tiktoknowm ${text}`, buttonText: {displayText: '► No Watermark'}, type: 1},
                     {buttonId: `tiktokmp3 ${text}`, buttonText: {displayText: '♫ Audio'}, type: 1}
                 ]
                 let buttonMessage = {
-                    video: { url: anu },
+                    video: { url: `https://api.akuari.my.id/downloader/tiktokwithwm?link=${text}` },
                     caption: `Download From ${text}`,
                     footer: 'Press The Button Below',
                     buttons: buttons,
@@ -2595,13 +2707,9 @@ break
 	        case 'instagram': case 'ig': case 'igdl': {
                 if (!text) throw 'No Query Url!'
                 m.reply(mess.wait)
-                if (/(?:\/p\/|\/reel\/|\/tv\/)([^\s&]+)/.test(isUrl(text)[0])) {
-                    let anu = await fetchJson(api('zenz', '/downloader/igdl', { link: isUrl(text)[0] } ))
-                    for (let media of anu.respon.link) arietube.sendFileUrl(m.chat, media, `Download Url Instagram From ${isUrl(text)[0]}`, m)
-                } else if (/\/stories\/([^\s&]+)/.test(isUrl(text)[0])) {
-                    let anu = await fetchJson(api('zenz', '/downloader/instastory', { url: isUrl(text)[0] } ))
-                    arietube.sendFileUrl(m.chat, anu.media[0].url, `Download Url Instagram From ${isUrl(text)[0]}`, m)
-                }
+                    let anu = await fetchJson(api('zenz', '/downloader/igdl', { link: text } ))
+                    for (let media of anu.respon.link) arietube.sendFileUrl(m.chat, media, `Download Url Instagram From ${text}`, m)
+                 
             }
             break
             case 'joox': case 'jooxdl': {
@@ -3403,7 +3511,7 @@ let capt = `⭔ Title: ${judul}
                 case 'sagiri':
                 case 'shinobu':
                 case 'megumin':
-                case 'wallnime':
+                case 'cosplay':
                 let buttonas = [
                     {buttonId: `${command}`, buttonText: {displayText: 'Next'}, type: 1}
                 ]
@@ -3600,33 +3708,31 @@ let capt = `⭔ Title: ${judul}
                 arietube.sendMessage(m.chat, kw2, { quoted: m })
 			break
 			
-			case 'infogempa': case 'bmkggempa':
-             get_result = await fetchJson(`https://zenzapis.xyz/information/bmkg/gempa?apikey=woaibeijingtiananmen`)
+			case 'infogempa': case 'bmkggempa': case 'gempa':
+             get_result = await fetchJson(`https://api.akuari.my.id/info/gempa`)
 			get_result = get_result.result
 			ini_txt = `⭔ Tanggal: ${get_result.tanggal}\n`
 			ini_txt += `⭔ Jam: ${get_result.jam}\n`
-			ini_txt += `⭔ Koordinat: ${get_result.coordinates}\n`
 			ini_txt += `⭔ Lintang: ${get_result.lintang}\n`
 			ini_txt += `⭔ Bujur: ${get_result.bujur}\n`
 			ini_txt += `⭔ Kekuatan: ${get_result.magnitude} SR\n`
 			ini_txt += `⭔ Kedalaman: ${get_result.kedalaman}\n`
 			ini_txt += `⭔ Wilayah: ${get_result.wilayah}\n`
 			ini_txt += `⭔ Potensi: ${get_result.potensi}\n`
-			ini_txt += `⭔ Wilayah yg dirasakan: ${get_result.dirasakan}\n`
 			 
-			arietube.sendImage(m.chat, get_result.shakemap, ini_txt, m)
+			arietube.sendImage(m.chat, get_result.image, ini_txt, m)
 			break
 			case 'translate':
 			if (args.length == 0) throw (`Example: ${prefix + command} en Tahu Bacem\n\n_Bahasa yang didukung dapat dilihat di: https://sites.google.com/site/opti365/translate_codes_`)
                     kode_negara = args[0]
                     args.shift()
                     ini_txt = args.join(" ")
-                    get_result = await fetchJson(`https://zenzapis.xyz/information/translate/${kode_negara}?query=${ini_txt}&apikey=woaibeijingtiananmen`)
+                    get_result = await fetchJson(`https://api.akuari.my.id/edukasi/terjemah?query=${ini_txt}&kode=${kode_negara}`)
                    
                     init_txt = `From : Deteksi Bahasa\n`
                     init_txt += `To : ${kode_negara}\n`
                     init_txt += `Original : ${ini_txt}\n`
-                    init_txt += `Translated : ${get_result.result}\n`
+                    init_txt += `Translated : ${get_result.terjemah}\n`
                     m.reply(init_txt)
                     break
 					case 'resoomer': case 'ringkas':
@@ -3766,12 +3872,12 @@ let capt = `⭔ Title: ${judul}
 			          case 'brainly':
                     if (args.length == 0) throw (`Example: ${prefix + command} Soekarno adalah`)
                     query = args.join(" ")
-                    get_result = await fetchJson(`http://api.lolhuman.xyz/api/brainly?apikey=woaibeijingtiananmen&query=${query}`)
-                    get_result = get_result.result
+                    get_result = await fetchJson(`https://api.akuari.my.id/edukasi/brainly?query=${query}`)
+                    get_result = get_result.hasil.data
                     ini_txt = "[ *BRAINLY SEARCH* ]\n\n"
                     for (var x of get_result) {
-                        ini_txt += `⭔ *Pertanyaan* : ${x.question.content}\n`
-                        ini_txt += `⭔ *Jawaban* : ${x.answer[0].content}\n\n`
+                        ini_txt += `⭔ *Pertanyaan* : ${x.pertanyaan}\n`
+                        ini_txt += `⭔ *Jawaban* : ${x.jawaban[0].text}\n\n`
                     }
                     m.reply(ini_txt)
                     break
@@ -3867,6 +3973,37 @@ break
 ╟🌏 ${prefix}moviesearch
 ╚═════ ▓▓ ࿇
 
+╔═ *🌐 Primbon Menu*
+╟🌏 ${prefix}shio [query]
+╟🌏 ${prefix}zodiak [query]
+╟🌏 ${prefix}masasubur [query]
+╟🌏 ${prefix}memancing [query]
+╟🌏 ${prefix}keberuntungan [query]
+╟🌏 ${prefix}weton [query]
+╟🌏 ${prefix}peruntungan [query]
+╟🌏 ${prefix}arahrejeki [query]
+╟🌏 ${prefix}harinaga [query]
+╟🌏 ${prefix}harisial [query]
+╟🌏 ${prefix}harisangar [query]
+╟🌏 ${prefix}haribaik [query]
+╟🌏 ${prefix}fengshui [query]
+╟🌏 ${prefix}artitarot [query]
+╟🌏 ${prefix}potensipenyakit [query]
+╟🌏 ${prefix}ramalannasib [query]
+╟🌏 ${prefix}pekerjaan [query]
+╟🌏 ${prefix}rejeki [query]
+╟🌏 ${prefix}sifatusaha [query]
+╟🌏 ${prefix}jadianpernikahan [query]
+╟🌏 ${prefix}kecocokanpasangan [query]
+╟🌏 ${prefix}kecocokannama [query]
+╟🌏 ${prefix}artinama [query]
+╟🌏 ${prefix}ramalancinta [query]
+╟🌏 ${prefix}suamiistri [query]
+╟🌏 ${prefix}ramalanjodohbali [query]
+╟🌏 ${prefix}ramalanjodoh [query]
+╟🌏 ${prefix}artimimpi [query]
+╟🌏 ${prefix}nomerhoki [query]
+╚═════ ▓▓ ࿇
 
 ╔═ *💾 Downloader Menu*
 ╟
@@ -3904,8 +4041,28 @@ break
 ╟🔃 ${prefix}chord [query]
 ╚═════ ▓▓ ࿇
 
-╔═ *🆎 Random Menu perbaikan*
-╟🔗 ${prefix}randomimage
+╔═ *🆎 Random Gambar Menu perbaikan*
+╟
+╟🔗 ${prefix}memeindo
+╟🔗 ${prefix}randommeme
+╟🔗 ${prefix}darkjoke
+╟🔗 ${prefix}loli
+╟🔗 ${prefix}cosplay
+╟🔗 ${prefix}katailham
+╟🔗 ${prefix}katabijak
+╟🔗 ${prefix}quotesanime
+╚═════ ▓▓ ࿇
+
+╔═ *🆎 Random Text Menu*
+╟
+╟🔗 ${prefix}bacot
+╟🔗 ${prefix}faktaunik
+╟🔗 ${prefix}nickepep
+╟🔗 ${prefix}sindiran
+╟🔗 ${prefix}pantunpakboy
+╟🔗 ${prefix}katailham
+╟🔗 ${prefix}katabijak
+╟🔗 ${prefix}quotesanime
 ╚═════ ▓▓ ࿇
 
 ╔═ *📃 TextPro Menu perbaikan*
@@ -3948,15 +4105,17 @@ break
 ╟📷 ${prefix}shadow
 ╟📷 ${prefix}romantic
 ╟📷 ${prefix}smoke
-╟📷 ${prefix}burnpapper
+╟📷 ${prefix}burn_papper
 ╟📷 ${prefix}naruto
-╟📷 ${prefix}lovemsg
-╟📷 ${prefix}grassmsg
-╟📷 ${prefix}lovetext
-╟📷 ${prefix}coffecup
-╟📷 ${prefix}butterfly
-╟📷 ${prefix}harrypotter
-╟📷 ${prefix}retrolol
+╟📷 ${prefix}love_message
+╟📷 ${prefix}cup
+╟📷 ${prefix}burn_paper
+╟📷 ${prefix}wodden_board
+╟📷 ${prefix}glowing_neon
+╟📷 ${prefix}horror
+╟📷 ${prefix}kayu
+╟📷 ${prefix}batik
+╟📷 ${prefix}fall
 ╚═════ ▓▓ ࿇
 
 ╔═ *📸 Ephoto Menu*
@@ -3983,7 +4142,7 @@ break
 ╟🎮 ${prefix}delttt
 ╟🎮 ${prefix}tictactoe
 ╟🎮 ${prefix}family100
-╟🎮 ${prefix}tebak [option] perbaikan
+╟🎮 ${prefix}tebak [option]
 ╟🎮 ${prefix}math [mode]
 ╟🎮 ${prefix}suitpvp [@tag]
 ╟🎮 ${prefix}suitbot
@@ -4068,6 +4227,14 @@ break
 ╟🧕 ${prefix}alquran
 ╟🧕 ${prefix}juzamma
 ╟🧕 ${prefix}tafsirsurah
+╚═════ ▓▓ ࿇
+
+╔═ *📚 Info Menu*
+╟
+╟🧕 ${prefix}covid [query]
+╟🧕 ${prefix}gempa 
+╟🧕 ${prefix}brainly [query]
+╟🧕 ${prefix}translate [query]
 ╚═════ ▓▓ ࿇
 
 ╔═ *🎙 Voice Changer*
@@ -4130,364 +4297,7 @@ break
                         arietube.send5ButLoc(m.chat, anus, arietube.user.name, global.thumb, btn)
                         }
                      }
-					  break						
-            case 'lista': case 'menau': case 'helpa': {
-             anus = `
-╔═══❖•ೋ°
-╟𓆩Welcome to AKUARI ♡ Whatsapp Bot!
-╟ Silahkan dipakai :D
-╚═══❖•ೋ°
-╔═ *😁 Group Menu*
-╟📤 ${prefix}linkgroup
-╟📤 ${prefix}ephemeral [option]
-╟📤 ${prefix}setppgc [image]
-╟📤 ${prefix}setname [text]
-╟📤 ${prefix}setdesc [text]
-╟📤 ${prefix}group [option]
-╟📤 ${prefix}editinfo [option]
-╟📤 ${prefix}add @user
-╟📤 ${prefix}kick @user
-╟📤 ${prefix}hidetag [text]
-╟📤 ${prefix}tagall [text]
-╟📤 ${prefix}antilink [on/off]
-╟📤 ${prefix}mute [on/off]
-╟📤 ${prefix}promote @user
-╟📤 ${prefix}demote @user
-╟📤 ${prefix}vote [text]
-╟📤 ${prefix}devote
-╟📤 ${prefix}upvote
-╟📤 ${prefix}cekvote
-╟📤 ${prefix}hapusvote
-╟📤 ${prefix}spamchat [text]
-╚═════ ▓▓ ࿇
-
-╔═ *🌐 Internet Menu*
-╟🌏 ${prefix}internetmenu
-╚═════ ▓▓ ࿇
-
-
-╔═ *💾 Downloader Menu*
-╟
-╟⏏️ ${prefix}tiktoknowm [url]
-╟⏏️ ${prefix}tiktokwm [url]
-╟⏏️ ${prefix}tiktokmp3 [url]
-╟⏏️ ${prefix}instagram [url]
-╟⏏️ ${prefix}twitter [url]
-╟⏏️ ${prefix}twittermp3 [url]
-╟⏏️ ${prefix}facebook [url]
-╟⏏️ ${prefix}pinterestdl [url]
-╟⏏️ ${prefix}ytmp3 [url]
-╟⏏️ ${prefix}ytmp4 [url]
-╟⏏️ ${prefix}getmusic [query]
-╟⏏️ ${prefix}getvideo [query]
-╟⏏️ ${prefix}umma [url]
-╟⏏️ ${prefix}joox [query]
-╟⏏️ ${prefix}spotify [url]
-╟⏏️ ${prefix}spotifysearch [query]
-╟⏏️ ${prefix}soundcloud [url]
-╟⏏️ ${prefix}zippyshare [url]
-╟⏏️ ${prefix}mediafire [url]
-╚═════ ▓▓ ࿇
-
-╔═ *🔍 Searching Menu*
-╟
-╟⏏️ ${prefix}kusonimesearch [query]
-╟🔃 ${prefix}play [query]
-╟🔃 ${prefix}yts [query]
-╟🔃 ${prefix}google [query]
-╟🔃 ${prefix}gimage [query]
-╟🔃 ${prefix}pinterest [query]
-╟🔃 ${prefix}wallpaper [query]
-╟🔃 ${prefix}wikimedia [query]
-╟🔃 ${prefix}ytsearch [query]
-╟🔃 ${prefix}ringtone [query]
-╟🔃 ${prefix}wikipedia [query]
-╟🔃 ${prefix}jaraktempuh [kota1|kota2]
-╟🔃 ${prefix}stalkig [query]
-╟🔃 ${prefix}stalkgithub [query]
-╟🔃 ${prefix}mlusername [user ID/server ID]
-╟🔃 ${prefix}ffusername [User ID]
-╟🔃 ${prefix}minecraftserverstatus [Server IP]
-╟🔃 ${prefix}genshinchara [query]
-╟🔃 ${prefix}lirik [query]
-╟🔃 ${prefix}chord [query]
-╟🔃 ${prefix}jadwaltv [query]
-╚═════ ▓▓ ࿇
-
-╔═ *🆎 Random Menu*
-╟🔗 ${prefix}randomimage
-╚═════ ▓▓ ࿇
-
-╔═ *📃 TextPro Menu*
-╟
-╟🕶️ ${prefix}3dchristmas
-╟🕶️ ${prefix}3ddeepsea
-╟🕶️ ${prefix}americanflag
-╟🕶️ ${prefix}3dscifi
-╟🕶️ ${prefix}3drainbow
-╟🕶️ ${prefix}3dwaterpipe
-╟🕶️ ${prefix}halloweenskeleton
-╟🕶️ ${prefix}sketch
-╟🕶️ ${prefix}bluecircuit
-╟🕶️ ${prefix}space
-╟🕶️ ${prefix}metallic
-╟🕶️ ${prefix}fiction
-╟🕶️ ${prefix}greenhorror
-╟🕶️ ${prefix}transformer
-╟🕶️ ${prefix}berry
-╟🕶️ ${prefix}thunder
-╟🕶️ ${prefix}magma
-╟🕶️ ${prefix}3dcrackedstone
-╟🕶️ ${prefix}3dneonlight
-╟🕶️ ${prefix}impressiveglitch
-╟🕶️ ${prefix}naturalleaves
-╟🕶️ ${prefix}fireworksparkle
-╟🕶️ ${prefix}matrix
-╟🕶️ ${prefix}dropwater
-╟🕶️ ${prefix}harrypotter
-╟🕶️ ${prefix}foggywindow
-╟🕶️ ${prefix}neondevils
-╟🕶️ ${prefix}christmasholiday
-╟🕶️ ${prefix}3dgradient
-╟🕶️ ${prefix}blackpink
-╟🕶️ ${prefix}gluetext
-╚═════ ▓▓ ࿇
-
-╔═ *📸 Foto Oxy Menu*
-╟
-╟📷 ${prefix}shadow
-╟📷 ${prefix}romantic
-╟📷 ${prefix}smoke
-╟📷 ${prefix}burnpapper
-╟📷 ${prefix}naruto
-╟📷 ${prefix}lovemsg
-╟📷 ${prefix}grassmsg
-╟📷 ${prefix}lovetext
-╟📷 ${prefix}coffecup
-╟📷 ${prefix}butterfly
-╟📷 ${prefix}harrypotter
-╟📷 ${prefix}retrolol
-╚═════ ▓▓ ࿇
-
-╔═ *📸 Ephoto Menu*
-╟
-╟📷 ${prefix}ffcover
-╟📷 ${prefix}crossfire
-╟📷 ${prefix}galaxy
-╟📷 ${prefix}glass
-╟📷 ${prefix}neon
-╟📷 ${prefix}beach
-╟📷 ${prefix}blackpink
-╟📷 ${prefix}igcertificate
-╟📷 ${prefix}ytcertificate
-╚═════ ▓▓ ࿇
-
-╔═ *🎮 Fun Menu*
-╟
-╟🎮 ${prefix}simih
-╟🎮 ${prefix}halah
-╟🎮 ${prefix}hilih
-╟🎮 ${prefix}huluh
-╟🎮 ${prefix}heleh
-╟🎮 ${prefix}holoh
-╟🎮 ${prefix}jadian
-╟🎮 ${prefix}jodohku
-╟🎮 ${prefix}delttt
-╟🎮 ${prefix}tictactoe
-╟🎮 ${prefix}family100
-╟🎮 ${prefix}tebak [option]
-╟🎮 ${prefix}math [mode]
-╟🎮 ${prefix}suitpvp [@tag]
-╟🎮 ${prefix}suitbot
-╟🎮 ${prefix}slot
-╟🎮 ${prefix}cekaku
-╟🎮 ${prefix}akinator
-╟🎮 ${prefix}cancelakinator
-╚═════ ▓▓ ࿇
-
-╔═ *🦪 Kerang Ajaib Menu*
-╟
-╟🌏 ${prefix}apakah [query]
-╟🌏 ${prefix}gimana [query]
-╟🌏 ${prefix}kapan [query]
-╟🌏 ${prefix}siapa [query
-╟🌏 ${prefix}bisakah [query]
-╟🌏 ${prefix}dimana/kemana [query]
-╟🌏 ${prefix}rate [query]
-╟🌏 ${prefix}gantengcek [query]
-╟🌏 ${prefix}cantikcek [query]
-╟🌏 ${prefix}lesbicek [query]
-╟🌏 ${prefix}gaycek [query]
-╟🌏 ${prefix}gaycek [query]
-╟🌏 ${prefix}cekpasangan [query1|query2]
-╟🌏 ${prefix}cekgender [nama]
-╚═════ ▓▓ ࿇
-
-╔═ *📃 Tag Menu*
-╟📋 ${prefix}tagmenu
-╚═════ ▓▓ ࿇
-
-╔═ *🔮 Primbon Menu*
-╟
-╟🔮 ${prefix}nomorhoki
-╟🔮 ${prefix}artimimpi
-╟🔮 ${prefix}artinama
-╟🔮 ${prefix}ramaljodoh
-╟🔮 ${prefix}ramaljodohbali
-╟🔮 ${prefix}suamiistri
-╟🔮 ${prefix}ramalcinta
-╟🔮 ${prefix}cocoknama
-╟🔮 ${prefix}pasangan
-╟🔮 ${prefix}jadiannikah
-╟🔮 ${prefix}sifatusaha
-╟🔮 ${prefix}rezeki
-╟🔮 ${prefix}pekerjaan
-╟🔮 ${prefix}nasib
-╟🔮 ${prefix}penyakit
-╟🔮 ${prefix}tarot
-╟🔮 ${prefix}fengshui
-╟🔮 ${prefix}haribaik
-╟🔮 ${prefix}harisangar
-╟🔮 ${prefix}harisial
-╟🔮 ${prefix}nagahari
-╟🔮 ${prefix}arahrezeki
-╟🔮 ${prefix}peruntungan
-╟🔮 ${prefix}weton
-╟🔮 ${prefix}karakter
-╟🔮 ${prefix}keberuntungan
-╟🔮 ${prefix}memancing
-╟🔮 ${prefix}masasubur
-╟🔮 ${prefix}zodiak
-╟🔮 ${prefix}shio
-╚═════ ▓▓ ࿇
-
-╔═ *🗜️ Creator/Convert Menu*
-╟
-╟🗜️ ${prefix}attp
-╟🗜️ ${prefix}ttp
-╟🗜️ ${prefix}toimage
-╟🗜️ ${prefix}removebg
-╟🗜️ ${prefix}sticker
-╟🗜️ ${prefix}emojimix
-╟🗜️ ${prefix}emojimix2
-╟🗜️ ${prefix}tovideo
-╟🗜️ ${prefix}togif
-╟🗜️ ${prefix}tourl
-╟🗜️ ${prefix}tovn
-╟🗜️ ${prefix}tomp3
-╟🗜️ ${prefix}toaudio
-╟🗜️ ${prefix}ebinary
-╟🗜️ ${prefix}dbinary
-╟🗜️ ${prefix}styletext
-╟🗜️ ${prefix}smeme
-╟🗜️ ${prefix}ktpmaker
-╟🗜️ ${prefix}bucincert [nama]
-╟🗜️ ${prefix}tololcert [nama]
-╟🗜️ ${prefix}pacarcert [nama1|nama2]
-╚═════ ▓▓ ࿇
-
-╔═ *📋 Main Menu*
-╟📋 ${prefix}mainmenu
-╚═════ ▓▓ ࿇
-
-╔═ *📁 Database Menu*
-╟
-╟📁 ${prefix}setcmd
-╟📁 ${prefix}listcmd
-╟📁 ${prefix}delcmd
-╟📁 ${prefix}lockcmd
-╟📁 ${prefix}addmsg
-╟📁 ${prefix}listmsg
-╟📁 ${prefix}getmsg
-╟📁 ${prefix}delmsg
-╚═════ ▓▓ ࿇
-
-╔═ *🕵 Anonymous Menu*
-╟
-╟🎭 ${prefix}anonymous
-╟🎭 ${prefix}start
-╟🎭 ${prefix}next
-╟🎭 ${prefix}keluar
-╚═════ ▓▓ ࿇
-
-╔═ *📚 Islami Menu*
-╟
-╟🧕 ${prefix}iqra
-╟🧕 ${prefix}hadist
-╟🧕 ${prefix}alquran
-╟🧕 ${prefix}juzamma
-╟🧕 ${prefix}tafsirsurah
-╚═════ ▓▓ ࿇
-
-╔═ *🎙 Voice Changer*
-╟
-╟🎙️ ${prefix}bass
-╟🎙️ ${prefix}blown
-╟🎙️ ${prefix}deep
-╟🎙️ ${prefix}earrape
-╟🎙️ ${prefix}fast
-╟🎙️ ${prefix}fat
-╟🎙️ ${prefix}nightcore
-╟🎙️ ${prefix}reverse
-╟🎙️ ${prefix}robot
-╟🎙️ ${prefix}slow
-╟🎙️ ${prefix}tupai
-╚═════ ▓▓ ࿇
-
-╔═ *👤 Owner Menu*
-╟
-╟👤 ${prefix}react [emoji]
-╟👤 ${prefix}chat [option]
-╟👤 ${prefix}join [link]
-╟👤 ${prefix}leave
-╟👤 ${prefix}block @user
-╟👤 ${prefix}unblock @user
-╟👤 ${prefix}bcgroup [text]
-╟👤 ${prefix}bcall [text]
-╟👤 ${prefix}setppbot [image]
-╟👤 ${prefix}setexif
-╟👤 ${prefix}setmenu [option]
-╟
-╚═════ ▓▓ ࿇`
-                let btn = [{
-                                urlButton: {
-                                    displayText: 'YouTube Channel',
-                                    url: 'https://www.youtube.com/channel/UCUAdKiNCnt6mpGD94okTaoQ'
-                                }
-                            }, {
-                                callButton: {
-                                    displayText: 'Number Phone Owner',
-                                    phoneNumber: '+62 811-664-6665'
-                                }
-                            }, {
-                                quickReplyButton: {
-                                    displayText: 'Status Bot',
-                                    id: 'ping'
-                                }
-                            }, {
-                                quickReplyButton: {
-                                    displayText: 'Contact Owner',
-                                    id: 'owner'
-                                }  
-                            }, {
-                                quickReplyButton: {
-                                    displayText: 'Script',
-                                    id: 'sc'
-                                }
-                            }]
-                         let setbot = db.data.settings[botNumber]
-                        if (setbot.templateImage) {
-                        arietube.send5ButImg(m.chat, anus, arietube.user.name, global.thumb, btn, global.thumb)
-                        } else if (setbot.templateGif) {
-                        arietube.send5ButGif(m.chat, anus, arietube.user.name, global.vitube, btn, global.thumb)
-                        } else if (setbot.templateVid) {
-                        arietube.send5ButVid(m.chat, anus, arietube.user.name, global.vitube, btn, global.thumb)
-                        } else if (setbot.templateMsg) {
-                        arietube.send5ButMsg(m.chat, anus, arietube.user.name, btn)
-                        } else if (setbot.templateLocation) {
-                        arietube.send5ButLoc(m.chat, anus, arietube.user.name, global.thumb, btn)
-                        }
-                     }
+					 
             break
 			case 'randomimage':
 			 let sections = [
