@@ -110,7 +110,7 @@ async function startarietube() {
        try {
        ppgc = await arietube.profilePictureUrl(pea[0].id, 'image')
        } catch {
-       ppgc = 'https://shortlink.hisokaarridho.my.id/rg1oT'
+       ppgc = 'https://shortlink.arietubearridho.my.id/rg1oT'
        }
        let wm_fatih = { url : ppgc }
        if (pea[0].announce == true) {
@@ -127,6 +127,51 @@ async function startarietube() {
     })
 
     
+	
+	
+	 arietube.ev.on('group-participants.update', async (anu) => {
+        console.log(anu)
+        try {
+            let metadata = await arietube.groupMetadata(anu.id)
+            let participants = anu.participants
+			let mem = anu.participants[0]
+            for (let num of participants) {
+                // Get Profile Picture User
+                try {
+                    ppuser = await arietube.profilePictureUrl(num, 'image')
+                } catch {
+                    ppuser = 'https://tinyurl.com/yx93l6da'
+                }
+
+                // Get Profile Picture Group
+                try {
+                    ppgroup = await arietube.profilePictureUrl(anu.id, 'image')
+                } catch {
+                    ppgroup = 'https://tinyurl.com/yx93l6da'
+                }
+if (anu.action == 'add' && mem.includes(arietube.user.jid)) {
+        arietube.sendMessage(anu.jid, `Halo!.. saya Ari Bot saya akan membatu mempermudah kehidupan..seperti membuat sticker dan lain-lain. untuk memulai silahkan ketik .menu`)
+      }
+                if (anu.action == 'add') {
+                    arietube.sendMessage(anu.id, { image: { url: ppuser }, mentions: [num], caption: `Selamat datang di ${metadata.subject} @${num.split("@")[0]} Semoga betah` })
+                } else if (anu.action == 'remove') {
+                    arietube.sendMessage(anu.id, { image: { url: ppuser }, mentions: [num], caption: `@${num.split("@")[0]} Selamat tinggal dari ${metadata.subject} Semoga BAHAGIA` })
+                } else if (anu.action == 'promote') {
+                    arietube.sendMessage(anu.id, { image: { url: ppuser }, mentions: [num], caption: `@${num.split('@')[0]} Hore Jadi Admin di ${metadata.subject}` })
+                } else if (anu.action == 'demote') {
+                    arietube.sendMessage(anu.id, { image: { url: ppuser }, mentions: [num], caption: `@${num.split('@')[0]} Yahh kamu engga jadi admin lagi di ${metadata.subject}` })
+              }
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    })
+	
+	
+	
+	
+	
+	
 	
     // Setting
     arietube.decodeJid = (jid) => {
