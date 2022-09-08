@@ -55,9 +55,10 @@ module.exports = arietube = async (arietube, m, chatUpdate, store) => {
         const itsMe = m.sender == botNumber ? true : false
         const text = q = args.join(" ")
         const quoted = m.quoted ? m.quoted : m
-		 const ownerNumber = ["628116646665@s.whatsapp.net"] 
+		 const ownerNumber = ['628976388612@s.whatsapp.net'] 
         const mime = (quoted.msg || quoted).mimetype || ''
         const isMedia = /image|video|sticker|audio/.test(mime)
+		
 	
         // Group
         const groupMetadata = m.isGroup ? await arietube.groupMetadata(m.chat).catch(e => {}) : ''
@@ -121,7 +122,7 @@ module.exports = arietube = async (arietube, m, chatUpdate, store) => {
 	    
         // Public & Self
         if (!arietube.public) {
-            if (!m.key.fromMe) return
+            if (!m.key.isOwner || !m.key.fromMe) return
         }
 
         // Push Message To Console && Auto Read
@@ -526,6 +527,24 @@ Selama *${clockString(new Date - user.afkTime)}*
             user.afkReason = ''
         }
 	    
+		
+		const uptime = function (seconds) {
+  seconds = Number(seconds);
+  var d = Math.floor(seconds / (3600 * 24));
+  var h = Math.floor((seconds % (3600 * 24)) / 3600);
+  var m = Math.floor((seconds % 3600) / 60);
+  var s = Math.floor(seconds % 60);
+  var dDisplay = d > 0 ? d + (d == 1 ? " hari, " : " Hari, ") : "";
+  var hDisplay = h > 0 ? h + (h == 1 ? " jam, " : " Jam, ") : "";
+  var mDisplay = m > 0 ? m + (m == 1 ? " menit, " : " Menit, ") : "";
+  var sDisplay = s > 0 ? s + (s == 1 ? " detik" : " Detik") : "";
+  return dDisplay + hDisplay + mDisplay + sDisplay;
+};
+		
+		
+		
+		
+		
         switch(command) {
 	    case 'afk': {
                 let user = global.db.data.users[m.sender]
@@ -1107,6 +1126,30 @@ break
 		let users = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : text.replace(/[^0-9]/g, '')+'@s.whatsapp.net'
 		await arietube.groupParticipantsUpdate(m.chat, [users], 'remove').then((res) => m.reply('Success mengeluarkan peserta')).catch((err) => m.reply('Tidak dapat mengeluarkan peserta'))
 	}
+	break
+	case 'restart': {
+                if (!isCreator) throw mess.owner
+              let buttons = [
+                    {buttonId: `restartt`, buttonText: {displayText: 'oke'}, type: 1}
+                ]
+                let buttonMessage = {
+                    text: `*-------「 Mau restart bot boss ? 」-------*`,
+                    footer: arietube.user.name,
+                    buttons: buttons,
+                    headerType: 4
+                }
+               arietube.sendMessage(m.chat, buttonMessage)
+		
+
+		}
+	break
+	case 'restartt': {
+                if (!isCreator) throw mess.owner
+				 exec(`pm2 restart 0`)
+			  m.reply(`Restarting.....`)
+		
+
+		}
 	break
 	case 'add': {
 		if (!m.isGroup) throw mess.group
@@ -1884,7 +1927,7 @@ break
 	        await fs.unlinkSync(FaTiH)
             }
 	       break     
-	        case 'simih': case 'simisimi': {
+	        case 'simih': case 'simisimi': case 'simi': {
             if (!text) throw `Example : ${prefix + command} text`
             hm = await fetchJson(api('zenz', '/simi/simi', { query : text } ))
             m.reply(hm.respon)
@@ -3123,7 +3166,7 @@ Lihat list Pesan Dengan ${prefix}listmsg`)
             }
             case 'public': {
                 if (!isCreator) throw mess.owner
-                arietube.public = false
+                arietube.public = true
                 m.reply('Sukse Change To Public Usage')
             }
             break
@@ -3133,7 +3176,23 @@ Lihat list Pesan Dengan ${prefix}listmsg`)
                 m.reply('Sukses Change To Self Usage')
             }
             break
-            case 'ping': case 'botstatus': case 'statusbot': {
+			 case "speed":
+      case "ping":
+	   case "cek":
+ case "runtime":
+ case "test":
+          case "run":
+const timestamp = speed();
+        const latensi = speed() - timestamp;
+        exec(`neofetch --stdout`, (error, stdout, stderr) => {
+          const child = stdout.toString("utf-8");
+          const ssd = child.replace(/Memory:/, "Ram:");
+          const pingnya = `${ssd}Speed: ${latensi.toFixed(4)} Second \n\nBot Aktif Selama : ${uptime(os.uptime())} \n\nOs: Windows Server 2012\nProgram: Nodejs\n\n RAM: ${formatp(os.totalmem() - os.freemem())} / ${formatp(os.totalmem())}`;
+          m.reply(pingnya);
+        });
+			break
+			
+            case 'pidng': case 'botsdtatus': case 'statdusbot': {
                 const used = process.memoryUsage()
                 const cpus = os.cpus().map(cpu => {
                     cpu.total = Object.keys(cpu.times).reduce((last, type) => last + cpu.times[type], 0)
@@ -3939,8 +3998,341 @@ break
                   arietube.sendImage(m.chat, ini_buffer, 'Screenshot Website', m)
                    					
                    					
-                    break						
-            case 'list': case 'menu': case 'help': case '?': {
+                    break		
+ case 'list': case 'menu': case 'help': case '?': 
+             anus = `
+╔═══❖•ೋ°
+╟𓆩Welcome to AKUARI ♡ Whatsapp Bot!
+╟ Silahkan dipakai :D
+╚═══❖•ೋ°
+╔═ *😁 Group Menu*
+╟📤 ${prefix}linkgroup
+╟📤 ${prefix}ephemeral [option]
+╟📤 ${prefix}setppgc [image]
+╟📤 ${prefix}setname [text]
+╟📤 ${prefix}setdesc [text]
+╟📤 ${prefix}group [option]
+╟📤 ${prefix}editinfo [option]
+╟📤 ${prefix}add @user
+╟📤 ${prefix}kick @user
+╟📤 ${prefix}hidetag [text]
+╟📤 ${prefix}tagall [text]
+╟📤 ${prefix}antilink [on/off]
+╟📤 ${prefix}mute [on/off]
+╟📤 ${prefix}promote @user
+╟📤 ${prefix}demote @user
+╟📤 ${prefix}vote [text]
+╟📤 ${prefix}devote
+╟📤 ${prefix}upvote
+╟📤 ${prefix}cekvote
+╟📤 ${prefix}hapusvote
+╟📤 ${prefix}spamchat [text]
+╚═════ ▓▓ ࿇
+
+╔═ *🌐 Internet Menu*
+╟🌏 ${prefix}moviesearch
+╚═════ ▓▓ ࿇
+
+╔═ *🌐 Primbon Menu*
+╟🌏 ${prefix}shio [query]
+╟🌏 ${prefix}zodiak [query]
+╟🌏 ${prefix}masasubur [query]
+╟🌏 ${prefix}memancing [query]
+╟🌏 ${prefix}keberuntungan [query]
+╟🌏 ${prefix}weton [query]
+╟🌏 ${prefix}peruntungan [query]
+╟🌏 ${prefix}arahrejeki [query]
+╟🌏 ${prefix}harinaga [query]
+╟🌏 ${prefix}harisial [query]
+╟🌏 ${prefix}harisangar [query]
+╟🌏 ${prefix}haribaik [query]
+╟🌏 ${prefix}fengshui [query]
+╟🌏 ${prefix}artitarot [query]
+╟🌏 ${prefix}potensipenyakit [query]
+╟🌏 ${prefix}ramalannasib [query]
+╟🌏 ${prefix}pekerjaan [query]
+╟🌏 ${prefix}rejeki [query]
+╟🌏 ${prefix}sifatusaha [query]
+╟🌏 ${prefix}jadianpernikahan [query]
+╟🌏 ${prefix}kecocokanpasangan [query]
+╟🌏 ${prefix}kecocokannama [query]
+╟🌏 ${prefix}artinama [query]
+╟🌏 ${prefix}ramalancinta [query]
+╟🌏 ${prefix}suamiistri [query]
+╟🌏 ${prefix}ramalanjodohbali [query]
+╟🌏 ${prefix}ramalanjodoh [query]
+╟🌏 ${prefix}artimimpi [query]
+╟🌏 ${prefix}nomerhoki [query]
+╚═════ ▓▓ ࿇
+
+╔═ *💾 Downloader Menu*
+╟
+╟⏏️ ${prefix}tiktoknowm [url]
+╟⏏️ ${prefix}tiktokwm [url]
+╟⏏️ ${prefix}tiktokmp3 [url]
+╟⏏️ ${prefix}instagram [url]
+╟⏏️ ${prefix}twitter [url]
+╟⏏️ ${prefix}twittermp3 [url]
+╟⏏️ ${prefix}facebook [url]
+╟⏏️ ${prefix}pinterestdl [url]
+╟⏏️ ${prefix}ytmp3 [url]
+╟⏏️ ${prefix}ytmp4 [url]
+╟⏏️ ${prefix}getmusic [query]
+╟⏏️ ${prefix}getvideo [query]
+╟⏏️ ${prefix}umma [url]
+╟⏏️ ${prefix}soundcloud [url]
+╟⏏️ ${prefix}zippyshare [url]
+╟⏏️ ${prefix}mediafire [url]
+╚═════ ▓▓ ࿇
+
+╔═ *🔍 Searching Menu*
+╟
+╟🔃 ${prefix}play [query]
+╟🔃 ${prefix}yts [query]
+╟🔃 ${prefix}google [query]
+╟🔃 ${prefix}gimage [query]
+╟🔃 ${prefix}pinterest [query]
+╟🔃 ${prefix}wallpaper [query]
+╟🔃 ${prefix}wikimedia [query]
+╟🔃 ${prefix}ytsearch [query]
+╟🔃 ${prefix}ringtone [query]
+╟🔃 ${prefix}wikipedia [query]
+╟🔃 ${prefix}lirik [query]
+╟🔃 ${prefix}chord [query]
+╚═════ ▓▓ ࿇
+
+╔═ *🆎 Random Gambar Menu perbaikan*
+╟
+╟🔗 ${prefix}memeindo
+╟🔗 ${prefix}randommeme
+╟🔗 ${prefix}darkjoke
+╟🔗 ${prefix}loli
+╟🔗 ${prefix}cosplay
+╟🔗 ${prefix}katailham
+╟🔗 ${prefix}katabijak
+╟🔗 ${prefix}quotesanime
+╚═════ ▓▓ ࿇
+
+╔═ *🆎 Random Text Menu*
+╟
+╟🔗 ${prefix}bacot
+╟🔗 ${prefix}faktaunik
+╟🔗 ${prefix}nickepep
+╟🔗 ${prefix}sindiran
+╟🔗 ${prefix}pantunpakboy
+╟🔗 ${prefix}katailham
+╟🔗 ${prefix}katabijak
+╟🔗 ${prefix}quotesanime
+╚═════ ▓▓ ࿇
+
+╔═ *📃 TextPro Menu perbaikan*
+╟
+╟🕶️ ${prefix}3dchristmas
+╟🕶️ ${prefix}3ddeepsea
+╟🕶️ ${prefix}americanflag
+╟🕶️ ${prefix}3dscifi
+╟🕶️ ${prefix}3drainbow
+╟🕶️ ${prefix}3dwaterpipe
+╟🕶️ ${prefix}halloweenskeleton
+╟🕶️ ${prefix}sketch
+╟🕶️ ${prefix}bluecircuit
+╟🕶️ ${prefix}space
+╟🕶️ ${prefix}metallic
+╟🕶️ ${prefix}fiction
+╟🕶️ ${prefix}greenhorror
+╟🕶️ ${prefix}transformer
+╟🕶️ ${prefix}berry
+╟🕶️ ${prefix}thunder
+╟🕶️ ${prefix}magma
+╟🕶️ ${prefix}3dcrackedstone
+╟🕶️ ${prefix}3dneonlight
+╟🕶️ ${prefix}impressiveglitch
+╟🕶️ ${prefix}naturalleaves
+╟🕶️ ${prefix}fireworksparkle
+╟🕶️ ${prefix}matrix
+╟🕶️ ${prefix}dropwater
+╟🕶️ ${prefix}harrypotter
+╟🕶️ ${prefix}foggywindow
+╟🕶️ ${prefix}neondevils
+╟🕶️ ${prefix}christmasholiday
+╟🕶️ ${prefix}3dgradient
+╟🕶️ ${prefix}blackpink
+╟🕶️ ${prefix}gluetext
+╚═════ ▓▓ ࿇
+
+╔═ *📸 Foto Oxy Menu perbaikan*
+╟
+╟📷 ${prefix}shadow
+╟📷 ${prefix}romantic
+╟📷 ${prefix}smoke
+╟📷 ${prefix}burn_papper
+╟📷 ${prefix}naruto
+╟📷 ${prefix}love_message
+╟📷 ${prefix}cup
+╟📷 ${prefix}burn_paper
+╟📷 ${prefix}wodden_board
+╟📷 ${prefix}glowing_neon
+╟📷 ${prefix}horror
+╟📷 ${prefix}kayu
+╟📷 ${prefix}batik
+╟📷 ${prefix}fall
+╚═════ ▓▓ ࿇
+
+╔═ *📸 Ephoto Menu*
+╟
+╟📷 ${prefix}blackpink
+╟📷 ${prefix}bear
+╟📷 ${prefix}angel
+╟📷 ${prefix}queen
+╟📷 ${prefix}style-1917
+╟📷 ${prefix}futuristic-technology
+╟📷 ${prefix}purple
+╚═════ ▓▓ ࿇
+
+╔═ *🎮 Fun Menu*
+╟
+╟🎮 ${prefix}simih
+╟🎮 ${prefix}halah
+╟🎮 ${prefix}hilih
+╟🎮 ${prefix}huluh
+╟🎮 ${prefix}heleh
+╟🎮 ${prefix}holoh
+╟🎮 ${prefix}jadian
+╟🎮 ${prefix}jodohku
+╟🎮 ${prefix}delttt
+╟🎮 ${prefix}tictactoe
+╟🎮 ${prefix}family100
+╟🎮 ${prefix}tebak [option]
+╟🎮 ${prefix}math [mode]
+╟🎮 ${prefix}suitpvp [@tag]
+╟🎮 ${prefix}suitbot
+╟🎮 ${prefix}slot
+╟🎮 ${prefix}cekaku
+╟🎮 ${prefix}akinator
+╟🎮 ${prefix}cancelakinator
+╚═════ ▓▓ ࿇
+
+╔═ *🦪 Kerang Ajaib Menu*
+╟
+╟🌏 ${prefix}apakah [query]
+╟🌏 ${prefix}gimana [query]
+╟🌏 ${prefix}kapan [query]
+╟🌏 ${prefix}siapa [query
+╟🌏 ${prefix}bisakah [query]
+╟🌏 ${prefix}dimana/kemana [query]
+╟🌏 ${prefix}rate [query]
+╟🌏 ${prefix}gantengcek [query]
+╟🌏 ${prefix}cantikcek [query]
+╟🌏 ${prefix}lesbicek [query]
+╟🌏 ${prefix}gaycek [query]
+╟🌏 ${prefix}gaycek [query]
+╟🌏 ${prefix}cekpasangan [query1|query2]
+╟🌏 ${prefix}cekgender [nama]
+╚═════ ▓▓ ࿇
+
+╔═ *📃 Tag Menu*
+╟📋 ${prefix}tagmenu
+╚═════ ▓▓ ࿇
+
+
+╔═ *🗜️ Creator/Convert Menu*
+╟
+╟🗜️ ${prefix}attp
+╟🗜️ ${prefix}ttp
+╟🗜️ ${prefix}toimage
+╟🗜️ ${prefix}removebg
+╟🗜️ ${prefix}sticker
+╟🗜️ ${prefix}emojimix
+╟🗜️ ${prefix}emojimix2
+╟🗜️ ${prefix}tovideo
+╟🗜️ ${prefix}togif
+╟🗜️ ${prefix}tourl
+╟🗜️ ${prefix}tovn
+╟🗜️ ${prefix}tomp3
+╟🗜️ ${prefix}toaudio
+╟🗜️ ${prefix}ebinary
+╟🗜️ ${prefix}dbinary
+╟🗜️ ${prefix}styletext
+╟🗜️ ${prefix}smeme
+╚═════ ▓▓ ࿇
+
+╔═ *📋 Main Menu*
+╟📋 ${prefix}mainmenu
+╚═════ ▓▓ ࿇
+
+╔═ *📁 Database Menu*
+╟
+╟📁 ${prefix}setcmd
+╟📁 ${prefix}listcmd
+╟📁 ${prefix}delcmd
+╟📁 ${prefix}lockcmd
+╟📁 ${prefix}addmsg
+╟📁 ${prefix}listmsg
+╟📁 ${prefix}getmsg
+╟📁 ${prefix}delmsg
+╚═════ ▓▓ ࿇
+
+╔═ *🕵 Anonymous Menu*
+╟
+╟🎭 ${prefix}anonymous
+╟🎭 ${prefix}start
+╟🎭 ${prefix}next
+╟🎭 ${prefix}keluar
+╚═════ ▓▓ ࿇
+
+╔═ *📚 Islami Menu*
+╟
+╟🧕 ${prefix}iqra
+╟🧕 ${prefix}hadist
+╟🧕 ${prefix}alquran
+╟🧕 ${prefix}juzamma
+╟🧕 ${prefix}tafsirsurah
+╚═════ ▓▓ ࿇
+
+╔═ *📚 Info Menu*
+╟
+╟🧕 ${prefix}covid [query]
+╟🧕 ${prefix}gempa 
+╟🧕 ${prefix}brainly [query]
+╟🧕 ${prefix}translate [query]
+╚═════ ▓▓ ࿇
+
+╔═ *🎙 Voice Changer*
+╟
+╟🎙️ ${prefix}bass
+╟🎙️ ${prefix}blown
+╟🎙️ ${prefix}deep
+╟🎙️ ${prefix}earrape
+╟🎙️ ${prefix}fast
+╟🎙️ ${prefix}fat
+╟🎙️ ${prefix}nightcore
+╟🎙️ ${prefix}reverse
+╟🎙️ ${prefix}robot
+╟🎙️ ${prefix}slow
+╟🎙️ ${prefix}tupai
+╚═════ ▓▓ ࿇
+
+╔═ *👤 Owner Menu*
+╟
+╟👤 ${prefix}react [emoji]
+╟👤 ${prefix}chat [option]
+╟👤 ${prefix}join [link]
+╟👤 ${prefix}leave
+╟👤 ${prefix}block @user
+╟👤 ${prefix}unblock @user
+╟👤 ${prefix}bcgroup [text]
+╟👤 ${prefix}bcall [text]
+╟👤 ${prefix}setppbot [image]
+╟👤 ${prefix}setexif
+╟👤 ${prefix}setmenu [option]
+╟
+╚═════ ▓▓ ࿇`
+
+ arietube.sendMessage(m.chat, { image: global.thumb,  caption: anus }, { quoted: m })
+                
+					 
+            break					
+            case 'lisddt': case 'mdfenu': case 'hedflp': case '?': {
              anus = `
 ╔═══❖•ೋ°
 ╟𓆩Welcome to AKUARI ♡ Whatsapp Bot!
